@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace RepairCompanyApi.Models;
 
 public class WeatherForecast
 {
+    [Key]
     public long Id { get; set; }
 
     public DateOnly Date { get; set; }

@@ -1,3 +1,5 @@
+using RepairCompanyApi.Data;
+using RepairCompanyApi.Repository;
 using RepairCompanyApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 
-builder.Services.AddScoped<IServiceWeather,ServiceWeather>();
+builder.Services.AddScoped<IWeatherService,WeatherService>();
+builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
+builder.Services.AddDbContext<RepairDbContext>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

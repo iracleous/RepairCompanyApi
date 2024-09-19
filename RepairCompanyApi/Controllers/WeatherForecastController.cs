@@ -10,20 +10,27 @@ namespace RepairCompanyApi.Controllers
     {
          
         private readonly ILogger<WeatherForecastController> _logger;
-        private readonly IServiceWeather _serviceWeather; 
+        private readonly IWeatherService _serviceWeather; 
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger,
-           IServiceWeather serviceWeather)
+           IWeatherService serviceWeather)
         {
             _logger = logger;
             _serviceWeather = serviceWeather;
         }
 
         [HttpGet("Get")]
- 
         public IEnumerable<WeatherForecast> Get()
         {
             return  _serviceWeather.GetWeatherForecast();
         }
+
+        [HttpPost]
+        public WeatherForecast Create(WeatherForecast forecast)
+        {
+            return _serviceWeather.CreateWeatherForecast(forecast);
+        }
+
+
     }
 }
