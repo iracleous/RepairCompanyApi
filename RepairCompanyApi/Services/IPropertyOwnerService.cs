@@ -6,7 +6,7 @@ namespace RepairCompanyApi.Services;
 
 public interface IPropertyOwnerService
 {
-    public   Task<ActionResult<IEnumerable<PropertyOwner>>> GetPropertyOwners();
+    public   Task<ActionResult<IEnumerable<PropertyOwner>>> GetPropertyOwners(int pageCount, int pageSize);
     public   Task<ActionResult<PropertyOwner>> GetPropertyOwner(long id);
     public   Task<IActionResult> PutPropertyOwner(long id, PropertyOwner propertyOwner);
     public  Task<ActionResult<PropertyOwner>> PostPropertyOwner

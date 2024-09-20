@@ -1,12 +1,17 @@
 using RepairCompanyApi.Data;
 using RepairCompanyApi.Repository;
 using RepairCompanyApi.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions
+     .ReferenceHandler = ReferenceHandler.Preserve;
+});
 
 
 builder.Services.AddScoped<IWeatherService,WeatherService>();

@@ -1,4 +1,6 @@
-﻿namespace RepairCompanyApi.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace RepairCompanyApi.Models;
 
 public class PropertyOwner
 {
@@ -7,6 +9,7 @@ public class PropertyOwner
     public string LastName { get; set; }= string.Empty;
     public string Description { get; set; } = string.Empty;
     public DateOnly RegistrationDate { get; set; }
+    
     virtual public List<BuildingProperty> BuildingProperties { get; set; } 
         = new List<BuildingProperty>();
 }

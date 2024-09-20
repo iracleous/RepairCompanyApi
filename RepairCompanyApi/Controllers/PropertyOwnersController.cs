@@ -26,9 +26,11 @@ namespace RepairCompanyApi.Controllers
 
         // GET: api/PropertyOwners
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PropertyOwner>>> GetPropertyOwners()
+        public async Task<ActionResult<IEnumerable<PropertyOwner>>> GetPropertyOwners(
+           [FromQuery] int pageCount, [FromQuery] int pageSize)
         {
-            return await _service.GetPropertyOwners();
+            _logger.LogDebug("Started");
+            return await _service.GetPropertyOwners(pageCount, pageSize);
         }
 
         // GET: api/PropertyOwners/5
@@ -60,5 +62,13 @@ namespace RepairCompanyApi.Controllers
         {
             return await _service.DeletePropertyOwner(id);
         }
+
+
+
+        /////
+        
+
+
+
     }
 }

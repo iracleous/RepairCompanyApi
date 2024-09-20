@@ -8,22 +8,33 @@ namespace RepairCompanyApi.Services
     public class PropertyOwnerService : IPropertyOwnerService
     {
         private readonly RepairDbContext _context;
+        private ILogger<PropertyOwnerService> _logger;
 
-        public PropertyOwnerService(RepairDbContext context)
+        public PropertyOwnerService(RepairDbContext context, ILogger<PropertyOwnerService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        public async Task<ActionResult<IEnumerable<PropertyOwner>>> GetPropertyOwners()
+        public async Task<ActionResult<IEnumerable<PropertyOwner>>> GetPropertyOwners(int pageCount, int pageSize)
         {
-            return await _context.PropertyOwners.ToListAsync();
-
+            _logger.LogDebug("start");
+            if (pageCount <= 0) pageCount = 1;
+            if (pageSize <= 0 || pageSize>20) pageSize = 10;
+            return await _context.PropertyOwners
+                .Skip( (pageCount-1)*pageSize )
+                .Take(pageSize)
+                .ToListAsync();
         }
 
        
         public async Task<ActionResult<PropertyOwner>> GetPropertyOwner(long id)
         {
-            var propertyOwner = await _context.PropertyOwners.FindAsync(id);
+            var propertyOwner = await _context
+                .PropertyOwners
+                .Include(o => o.BuildingProperties)
+                .FirstOrDefaultAsync(o => o.Id == id);
+             
 
             if (propertyOwner == null)
             {
@@ -93,6 +104,5 @@ namespace RepairCompanyApi.Services
             return _context.PropertyOwners.Any(e => e.Id == id);
         }
     }
-
 }
 
