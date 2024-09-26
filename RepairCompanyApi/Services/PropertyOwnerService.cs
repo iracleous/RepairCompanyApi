@@ -34,8 +34,6 @@ namespace RepairCompanyApi.Services
                 .PropertyOwners
                 .Include(o => o.BuildingProperties)
                 .FirstOrDefaultAsync(o => o.Id == id);
-             
-
             if (propertyOwner == null)
             {
                 return   new NotFoundResult();

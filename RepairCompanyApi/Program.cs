@@ -1,6 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using RepairCompanyApi.Data;
 using RepairCompanyApi.Repository;
+using RepairCompanyApi.Security;
 using RepairCompanyApi.Services;
+using System.Security.AccessControl;
+using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +27,44 @@ builder.Services.AddDbContext<RepairDbContext>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+
+
+//security 1/2
+// adding authentication
+/**
+ * ASP.NET Core middleware that enables an application to 
+ * receive an OpenID Connect bearer token.
+ * // reading the header from a request and parsing it
+ * */
+
+
+var securitySecret = builder.Configuration.GetValue<string>("Security:Secret") 
+    ?? SecurityInfo.SecretKey;
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "your-issuer",  // Replace with your issuer
+        ValidAudience = "your-audience",  // Replace with your audience
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securitySecret))  // Replace with your secret key
+    };
+});
+
+
+
+
+
 
 var app = builder.Build();
 
