@@ -129,25 +129,44 @@ namespace RepairCompanyApi.Services
             if (pageCount <= 0) pageCount = 1;
             if (pageSize <= 0 || pageSize > 20) pageSize = 10;
 
-            List<PropertyOwner> propertyOwners = await _context.PropertyOwners.Include(o => o.BuildingProperties)
+            //List<PropertyOwner> propertyOwners = await _context.PropertyOwners.Include(o => o.BuildingProperties)
+            //    .Skip((pageCount - 1) * pageSize)
+            //    .Take(pageSize)
+            //    .ToListAsync();
+
+            //List<OwnerData> result = propertyOwners
+            //            .ConvertAll<OwnerData>(o => new OwnerData 
+            //            {
+            //                OwnerId = o.Id, 
+            //                OwnerName = o.LastName + " " + o.FirstName,
+            //                 Buildings =    o.BuildingProperties.ConvertAll<BuildingOwnerDto>(
+            //                     b => new BuildingOwnerDto { 
+            //                         Address = b.Address, 
+            //                         BuildingId = b.Id
+            //                     }
+            //                     )
+            //            }
+            //);
+
+            return await _context
+                .PropertyOwners
+                .Include(o => o.BuildingProperties)
                 .Skip((pageCount - 1) * pageSize)
                 .Take(pageSize)
+                .Select(o => new OwnerData
+                    {
+                        OwnerId = o.Id,
+                        OwnerName = o.LastName + " " + o.FirstName,
+                        Buildings = o.BuildingProperties.ConvertAll<BuildingOwnerDto>(
+                                     b => new BuildingOwnerDto
+                                     {
+                                         Address = b.Address,
+                                         BuildingId = b.Id
+                                     }
+                                     )
+                    }
+                )
                 .ToListAsync();
-
-            List<OwnerData> result = propertyOwners
-                        .ConvertAll<OwnerData>(o => new OwnerData 
-                        {
-                            OwnerId = o.Id, 
-                            OwnerName = o.LastName + " " + o.FirstName,
-                             Buildings =    o.BuildingProperties.ConvertAll<BuildingOwnerDto>(
-                                 b => new BuildingOwnerDto { 
-                                     Address = b.Address, 
-                                     BuildingId = b.Id
-                                 }
-                                 )
-                        }
-            );
-            return result;
         }
     }
 }
