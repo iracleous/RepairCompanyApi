@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RepairCompanyApi.Data;
+using RepairCompanyApi.Dtos;
 using RepairCompanyApi.Models;
 using RepairCompanyApi.Services;
 
@@ -66,9 +67,20 @@ namespace RepairCompanyApi.Controllers
 
 
         /////
-        
+        [HttpPut("building")]
+        public async Task<IActionResult> AssignProperty([FromQuery] long propertyOwnerId,
+            [FromQuery] long buildingId)
+        {
+            return await _service.AssignPropertyToOwner(propertyOwnerId, buildingId);
+        }
 
-
-
+        ///
+        [HttpGet("owners")]
+        public async Task<ActionResult<IEnumerable<OwnerData>>> GetOwners(
+           [FromQuery] int pageCount, [FromQuery] int pageSize)
+        {
+            _logger.LogDebug("Started");
+            return await _service.GetOwnerData(pageCount, pageSize);
+        }
     }
 }

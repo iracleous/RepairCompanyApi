@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RepairCompanyApi.Dtos;
 using RepairCompanyApi.Models;
 
 namespace RepairCompanyApi.Services;
@@ -12,4 +13,10 @@ public interface IPropertyOwnerService
     public  Task<ActionResult<PropertyOwner>> PostPropertyOwner
         (PropertyOwner propertyOwner);
     public Task<IActionResult> DeletePropertyOwner(long id);
+    ///
+
+    public Task<IActionResult> AssignPropertyToOwner(long popertyOwnerId, long propertyId);
+
+    public Task<ActionResult<IEnumerable<OwnerData>>> GetOwnerData(int pageCount, int pageSize);
+
  }

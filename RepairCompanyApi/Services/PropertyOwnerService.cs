@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RepairCompanyApi.Data;
+using RepairCompanyApi.Dtos;
 using RepairCompanyApi.Models;
+using System.Drawing.Printing;
 
 namespace RepairCompanyApi.Services
 {
@@ -21,7 +23,7 @@ namespace RepairCompanyApi.Services
             _logger.LogDebug("start");
             if (pageCount <= 0) pageCount = 1;
             if (pageSize <= 0 || pageSize>20) pageSize = 10;
-            return await _context.PropertyOwners
+            return await _context.PropertyOwners.Include (o => o.BuildingProperties)
                 .Skip( (pageCount-1)*pageSize )
                 .Take(pageSize)
                 .ToListAsync();
@@ -100,6 +102,52 @@ namespace RepairCompanyApi.Services
         private bool PropertyOwnerExists(long id)
         {
             return _context.PropertyOwners.Any(e => e.Id == id);
+        }
+
+        public async Task<IActionResult> AssignPropertyToOwner(long propertyOwnerId, long propertyId)
+        {
+            PropertyOwner? propertyOwner = await _context.PropertyOwners
+                .FindAsync(propertyOwnerId);
+            if (propertyOwner == null)
+            {
+                return new NotFoundResult();
+            }
+            BuildingProperty? buildingProperty = await _context.BuildingProperties
+                .FindAsync(propertyId);
+            if (buildingProperty == null)
+            {
+                return new NotFoundResult();
+            }
+            buildingProperty.PropertyOwner = propertyOwner;
+            await _context.SaveChangesAsync();
+            return new NoContentResult();
+        }
+
+        public async Task<ActionResult<IEnumerable<OwnerData>>> GetOwnerData(int pageCount, int pageSize)
+        {
+            _logger.LogDebug("start");
+            if (pageCount <= 0) pageCount = 1;
+            if (pageSize <= 0 || pageSize > 20) pageSize = 10;
+
+            List<PropertyOwner> propertyOwners = await _context.PropertyOwners.Include(o => o.BuildingProperties)
+                .Skip((pageCount - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            List<OwnerData> result = propertyOwners
+                        .ConvertAll<OwnerData>(o => new OwnerData 
+                        {
+                            OwnerId = o.Id, 
+                            OwnerName = o.LastName + " " + o.FirstName,
+                             Buildings =    o.BuildingProperties.ConvertAll<BuildingOwnerDto>(
+                                 b => new BuildingOwnerDto { 
+                                     Address = b.Address, 
+                                     BuildingId = b.Id
+                                 }
+                                 )
+                        }
+            );
+            return result;
         }
     }
 }
