@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using RepairCompanyApi.Data;
 using RepairCompanyApi.Repository;
 using RepairCompanyApi.Security;
 using RepairCompanyApi.Services;
+using System.Data;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +36,16 @@ builder.Services.AddDbContext<RepairDbContext>();
 
 //builder.Services.AddAutoMapper(typeof(OwnerMappingProfile));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
+// Register IDbConnection to inject SqlConnection
+builder.Services.AddScoped<IDbConnection>(sp =>
+    new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register your repository
+builder.Services.AddScoped(typeof(IRepository<>), typeof(DapperRepository<>));
+
+
 
 //security 1/2
 // adding authentication

@@ -15,6 +15,7 @@ namespace RepairCompanyApi.Data
         {
             string connectionString = "Data Source=(local);Initial Catalog=repairDb-2024;User Id=sa; Password=admin!@#123;TrustServerCertificate=True;";
             optionsBuilder.UseSqlServer(connectionString);
+            
         }
 
     }
