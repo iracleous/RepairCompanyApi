@@ -13,6 +13,4 @@ public class PropertyOwnerService3
         _propertyOwnerRepository = propertyOwnerRepository;
         _logger = logger;
     }
-
-
 }

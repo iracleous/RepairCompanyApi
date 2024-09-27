@@ -17,6 +17,6 @@ public interface IPropertyOwnerService
 
     public Task<IActionResult> AssignPropertyToOwner(long popertyOwnerId, long propertyId);
 
-    public Task<ActionResult<IEnumerable<OwnerData>>> GetOwnerData(int pageCount, int pageSize);
+    public Task<ActionResult<IEnumerable<OwnerDataDto>>> GetOwnerData(int pageCount, int pageSize);
 
  }

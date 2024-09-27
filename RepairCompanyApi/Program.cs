@@ -26,7 +26,10 @@ builder.Services.AddScoped<IWeatherService,WeatherService>();
 builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
 
 builder.Services.AddScoped<IPropertyOwnerService, PropertyOwnerService>();
-builder.Services.AddScoped<IPropertyOwnerRepository, PropertyOwnerRepository>();    
+
+builder.Services.AddScoped<IPropertyOwnerRepository, PropertyOwnerRepository>();   
+//builder.Services.AddScoped<IPropertyOwnerRepository, PropertyOwnerRepositoryDapper>(); 
+
 builder.Services.AddScoped<PropertyOwnerService2, PropertyOwnerService2>();    
 
 

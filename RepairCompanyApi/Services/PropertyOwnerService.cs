@@ -123,7 +123,7 @@ namespace RepairCompanyApi.Services
             return new NoContentResult();
         }
 
-        public async Task<ActionResult<IEnumerable<OwnerData>>> GetOwnerData(int pageCount, int pageSize)
+        public async Task<ActionResult<IEnumerable<OwnerDataDto>>> GetOwnerData(int pageCount, int pageSize)
         {
             _logger.LogDebug("start");
             if (pageCount <= 0) pageCount = 1;
@@ -134,8 +134,8 @@ namespace RepairCompanyApi.Services
                 .Take(pageSize)
                 .ToListAsync();
 
-            List<OwnerData> result = propertyOwners
-                        .ConvertAll<OwnerData>(o => new OwnerData
+            List<OwnerDataDto> result = propertyOwners
+                        .ConvertAll<OwnerDataDto>(o => new OwnerDataDto
                         {
                             OwnerId = o.Id,
                             OwnerName = o.LastName + " " + o.FirstName,
@@ -143,7 +143,7 @@ namespace RepairCompanyApi.Services
                                  b => new BuildingOwnerDto
                                  {
                                      Address = b.Address,
-                                     BuildingId = b.Id
+                                     Id = b.Id
                                  }
                                  )
                         }

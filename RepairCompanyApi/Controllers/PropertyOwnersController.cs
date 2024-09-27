@@ -76,7 +76,7 @@ namespace RepairCompanyApi.Controllers
 
         ///
         [HttpGet("owners")]
-        public async Task<ActionResult<IEnumerable<OwnerData>>> GetOwners(
+        public async Task<ActionResult<IEnumerable<OwnerDataDto>>> GetOwners(
            [FromQuery] int pageCount, [FromQuery] int pageSize)
         {
             _logger.LogDebug("Started");

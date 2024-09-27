@@ -8,7 +8,7 @@ public class OwnerMappingProfile : Profile
 {
     public OwnerMappingProfile()
     {
-        CreateMap<PropertyOwner, OwnerData>()
+        CreateMap<PropertyOwner, OwnerDataDto>()
             .ForMember(
                dest => dest.OwnerId,
                opt => opt.MapFrom(src => src.Id))
@@ -19,8 +19,11 @@ public class OwnerMappingProfile : Profile
             .ForMember(dest => dest.Buildings,
             opt => opt.MapFrom(src => src.BuildingProperties));
 
-        CreateMap<BuildingProperty, BuildingOwnerDto>()
-            .ForMember(dest => dest.BuildingId, opt => opt.MapFrom(src => src.Id))  
-            .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address));
+        CreateMap<BuildingProperty, BuildingOwnerDto>();
+          //  .ForMember(dest => dest.BuildingId, opt => opt.MapFrom(src => src.Id))  
+         //   .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address));
+    
+            CreateMap<Repair, BuildingRepairDto>();  
+    
     }
 }

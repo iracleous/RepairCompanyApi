@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RepairCompanyApi.Data;
+using RepairCompanyApi.Dtos;
 using RepairCompanyApi.Models;
 
 namespace RepairCompanyApi.Repository;
@@ -17,11 +18,17 @@ public class PropertyOwnerRepository: IPropertyOwnerRepository
 
     public async Task<IEnumerable<PropertyOwner>> GetAllAsync(int pageCount, int pageSize)
     {
+        try { 
         return await _context.PropertyOwners
             .Include(o => o.BuildingProperties)
+            .ThenInclude(b => b.Repairs)
             .Skip(pageSize*(pageCount-1))
             .Take(pageSize)
-            .ToListAsync();
+            .ToListAsync();}
+        catch (Exception)
+        {
+            return [];
+        }
     }
    
     public async Task<PropertyOwner?> GetByIdAsync(long id)
@@ -80,5 +87,40 @@ public class PropertyOwnerRepository: IPropertyOwnerRepository
             .PropertyOwners
             .FirstOrDefaultAsync(o => o.LastName == name);
     }
-   
+
+
+    public async Task<ApiResult<IEnumerable<PropertyOwner>>> GetAllAsync2(int pageCount, int pageSize)
+    {
+        try
+        {
+            return new ApiResult<IEnumerable<PropertyOwner>>
+            {
+                Status = 0,
+                Error = string.Empty,
+                Result = await _context.PropertyOwners
+                                    .Include(o => o.BuildingProperties)
+                                    .ThenInclude(b => b.Repairs)
+                                    .Skip(pageSize * (pageCount - 1))
+                                    .Take(pageSize)
+                                    .ToListAsync()
+            };
+        }
+        catch(ArgumentException ea){
+            return new ApiResult<IEnumerable<PropertyOwner>>
+            {
+                Status = 12,
+                Error = ea.Message,
+                Result = null
+            };
+        }
+        catch (Exception e)
+        {
+            return new ApiResult<IEnumerable<PropertyOwner>>
+            {
+                Status = 10,
+                Error = e.Message,
+                Result = null
+            };
+        }
+    }
 }

@@ -6,7 +6,7 @@ using RepairCompanyApi.Repository;
 
 namespace RepairCompanyApi.Services;
 
-public class PropertyOwnerService2
+public class PropertyOwnerService2: IPropertyOwnerService2
 {
     private readonly IMapper _mapper;
     private readonly IPropertyOwnerRepository _propertyOwnerRepository;
@@ -21,7 +21,7 @@ public class PropertyOwnerService2
         _logger = logger;
     }
 
-    public async Task<ActionResult<IEnumerable<OwnerData>>> GetOwnerData(int pageCount, int pageSize)
+    public async Task<ActionResult<IEnumerable<OwnerDataDto>>> GetOwnerData(int pageCount, int pageSize)
     {
         _logger.LogDebug("start");
         if (pageCount <= 0) pageCount = 1;
@@ -31,8 +31,8 @@ public class PropertyOwnerService2
             await _propertyOwnerRepository
             .GetAllAsync(pageCount, pageSize);
 
-        IEnumerable<OwnerData> destinationList = 
-            _mapper.Map<List<OwnerData>>(propertyOwners);
+        IEnumerable<OwnerDataDto> destinationList = 
+            _mapper.Map<List<OwnerDataDto>>(propertyOwners);
 
         return    destinationList.ToList();
     }
