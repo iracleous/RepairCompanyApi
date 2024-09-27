@@ -4,9 +4,7 @@ using RepairCompanyApi.Data;
 using RepairCompanyApi.Repository;
 using RepairCompanyApi.Security;
 using RepairCompanyApi.Services;
-using System.Security.AccessControl;
 using System.Text;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,13 +23,17 @@ builder.Services.AddScoped<IWeatherService,WeatherService>();
 builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
 
 builder.Services.AddScoped<IPropertyOwnerService, PropertyOwnerService>();
+builder.Services.AddScoped<IPropertyOwnerRepository, PropertyOwnerRepository>();    
+builder.Services.AddScoped<PropertyOwnerService2, PropertyOwnerService2>();    
+
+
 builder.Services.AddDbContext<RepairDbContext>();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+//builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddSwaggerGen();
 
-
-
+//builder.Services.AddAutoMapper(typeof(OwnerMappingProfile));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 //security 1/2
 // adding authentication
@@ -71,13 +73,17 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//Setting up Swagger (ASP.NET Core) using the Authorization headers (Bearer) ++
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
 
 app.UseHttpsRedirection();
+
+//security 2/2
+app.UseAuthentication();
 
 app.UseAuthorization();
 
