@@ -14,10 +14,10 @@ public class DapperRepository<T> : IRepository<T> where T : class
         _dbConnection = dbConnection;
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public async Task<IEnumerable<T>> GetAllAsync(int pageCount, int pageSize)
     {
-        var sql = $"SELECT * FROM {typeof(T).Name}s"; 
-        return await _dbConnection.QueryAsync<T>(sql);
+        var sql = $"SELECT * FROM {typeof(T).Name}s OFFSET @Offset ROWS FETCH NEXT @Page ROWS ONLY"; 
+        return await _dbConnection.QueryAsync<T>(sql, new { Offset = (pageCount-1)* pageSize, Page = pageSize });
     }
 
     public async Task<T?> GetByIdAsync(long id)
@@ -26,21 +26,24 @@ public class DapperRepository<T> : IRepository<T> where T : class
         return await _dbConnection.QueryFirstOrDefaultAsync<T>(sql, new { Id = id });
     }
 
-    public async Task<long> AddAsync(T entity)
+    public async Task<bool> AddAsync(T entity)
     {
         var sql = $"INSERT INTO {typeof(T).Name}s VALUES (@Entity); SELECT CAST(SCOPE_IDENTITY() as long)";
-        return await _dbConnection.ExecuteAsync(sql, new { Entity = entity });
+        var result = await _dbConnection.ExecuteAsync(sql, new { Entity = entity });
+        return result > 0;
     }
 
-    public async Task<long> UpdateAsync(T entity)
+    public async Task<bool> UpdateAsync(T entity)
     {
         var sql = $"UPDATE {typeof(T).Name}s SET @Entity WHERE Id = @Id";
-        return await _dbConnection.ExecuteAsync(sql, entity);
+        var result = await _dbConnection.ExecuteAsync(sql, entity);
+        return result > 0;
     }
 
-    public async Task<long> DeleteAsync(long id)
+    public async Task<bool> DeleteAsync(long id)
     {
         var sql = $"DELETE FROM {typeof(T).Name}s WHERE Id = @Id";
-        return await _dbConnection.ExecuteAsync(sql, new { Id = id });
+        var result = await _dbConnection.ExecuteAsync(sql, new { Id = id });
+        return result > 0;
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RepairCompanyApi.Data;
 using RepairCompanyApi.Repository;
@@ -29,7 +30,9 @@ builder.Services.AddScoped<IPropertyOwnerRepository, PropertyOwnerRepository>();
 builder.Services.AddScoped<PropertyOwnerService2, PropertyOwnerService2>();    
 
 
-builder.Services.AddDbContext<RepairDbContext>();
+builder.Services.AddDbContext<RepairDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 //// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 //builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();

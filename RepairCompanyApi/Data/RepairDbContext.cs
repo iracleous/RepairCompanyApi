@@ -5,6 +5,17 @@ namespace RepairCompanyApi.Data
 {
     public class RepairDbContext:DbContext
     {
+        private readonly IConfiguration _configuration;
+
+        public RepairDbContext(DbContextOptions<RepairDbContext> options, 
+            IConfiguration configuration)
+        : base(options)
+        {
+            _configuration = configuration;
+        }
+
+
+
         public DbSet<WeatherForecast> WeatherForecasts { get; set; }
 
         public DbSet<PropertyOwner> PropertyOwners { get; set; }
@@ -13,9 +24,12 @@ namespace RepairCompanyApi.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string connectionString = "Data Source=(local);Initial Catalog=repairDb-2024;User Id=sa; Password=admin!@#123;TrustServerCertificate=True;";
-            optionsBuilder.UseSqlServer(connectionString);
-            
+            if (!optionsBuilder.IsConfigured)
+            {
+                var connectionString = _configuration.GetConnectionString("DefaultConnection");
+                optionsBuilder.UseSqlServer(connectionString);
+            }
+
         }
 
     }

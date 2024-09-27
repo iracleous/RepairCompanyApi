@@ -17,7 +17,11 @@ public class PropertyOwnerRepository: IPropertyOwnerRepository
 
     public async Task<IEnumerable<PropertyOwner>> GetAllAsync(int pageCount, int pageSize)
     {
-        return await _context.PropertyOwners.Include(o => o.BuildingProperties).ToListAsync();
+        return await _context.PropertyOwners
+            .Include(o => o.BuildingProperties)
+            .Skip(pageSize*(pageCount-1))
+            .Take(pageSize)
+            .ToListAsync();
     }
    
     public async Task<PropertyOwner?> GetByIdAsync(long id)
