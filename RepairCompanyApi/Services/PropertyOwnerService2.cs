@@ -6,7 +6,7 @@ using RepairCompanyApi.Repository;
 
 namespace RepairCompanyApi.Services;
 
-public class PropertyOwnerService2: IPropertyOwnerService2
+public class PropertyOwnerService2: IPropertyOwnerService
 {
     private readonly IMapper _mapper;
     private readonly IPropertyOwnerRepository _propertyOwnerRepository;
@@ -31,10 +31,43 @@ public class PropertyOwnerService2: IPropertyOwnerService2
             await _propertyOwnerRepository
             .GetAllAsync(pageCount, pageSize);
 
-        IEnumerable<OwnerDataDto> destinationList = 
+        IEnumerable<OwnerDataDto> destinationList =
             _mapper.Map<List<OwnerDataDto>>(propertyOwners);
 
-        return    destinationList.ToList();
+        return destinationList.ToList();
+    }
+
+
+    public Task<IActionResult> AssignPropertyToOwner(long popertyOwnerId, long propertyId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IActionResult> DeletePropertyOwner(long id)
+    {
+        throw new NotImplementedException();
+    }
+
+  
+
+    public Task<ActionResult<PropertyOwner>> GetPropertyOwner(long id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ActionResult<IEnumerable<PropertyOwner>>> GetPropertyOwners(int pageCount, int pageSize)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ActionResult<PropertyOwner>> PostPropertyOwner(PropertyOwner propertyOwner)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IActionResult> PutPropertyOwner(long id, PropertyOwner propertyOwner)
+    {
+        throw new NotImplementedException();
     }
 }
 

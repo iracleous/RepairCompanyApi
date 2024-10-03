@@ -12,5 +12,4 @@ public class GenService3<T> where T : class
         _propertyOwnerRepository = propertyOwnerRepository;
         _logger = logger;
     }
-
 }

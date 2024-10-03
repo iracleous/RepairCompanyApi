@@ -15,8 +15,8 @@ public class PropertyOwnerRepositoryDapper : IPropertyOwnerRepository
 
     public async Task<IEnumerable<PropertyOwner>> GetAllAsync(int pageCount, int pageSize)
     {
-        var sql = $"SELECT * FROM PropertyOwners";
-        return await _dbConnection.QueryAsync<PropertyOwner>(sql);
+         var sql = $"SELECT * FROM PropertyOwners order by id OFFSET @Offset ROWS FETCH NEXT @Page ROWS ONLY";
+        return await _dbConnection.QueryAsync<PropertyOwner>(sql, new { Offset = (pageCount - 1) * pageSize, Page = pageSize });
     }
 
     public async Task<PropertyOwner?> GetByIdAsync(long id)

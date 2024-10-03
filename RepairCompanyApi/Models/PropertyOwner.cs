@@ -8,7 +8,7 @@ public class PropertyOwner
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; }= string.Empty;
     public string Description { get; set; } = string.Empty;
-    public DateOnly RegistrationDate { get; set; }
+    public DateTime RegistrationDate { get; set; }
     
     virtual public List<BuildingProperty> BuildingProperties { get; set; } 
         = new List<BuildingProperty>();

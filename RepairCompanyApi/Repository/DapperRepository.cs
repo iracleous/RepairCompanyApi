@@ -16,8 +16,8 @@ public class DapperRepository<T> : IRepository<T> where T : class
 
     public async Task<IEnumerable<T>> GetAllAsync(int pageCount, int pageSize)
     {
-        var sql = $"SELECT * FROM {typeof(T).Name}s OFFSET @Offset ROWS FETCH NEXT @Page ROWS ONLY"; 
-        return await _dbConnection.QueryAsync<T>(sql, new { Offset = (pageCount-1)* pageSize, Page = pageSize });
+        var sql = $"SELECT * FROM {typeof(T).Name}s order by Id "; 
+        return await _dbConnection.QueryAsync<T>(sql);
     }
 
     public async Task<T?> GetByIdAsync(long id)
