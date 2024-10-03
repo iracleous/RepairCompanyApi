@@ -80,7 +80,16 @@ namespace RepairCompanyApi.Controllers
            [FromQuery] int pageCount, [FromQuery] int pageSize)
         {
             _logger.LogDebug("Started");
-            return await _service.GetOwnerData(pageCount, pageSize);
+
+            var timeStart = DateTime.Now;
+
+             var result = await _service.GetOwnerDataAsync(pageCount, pageSize);
+
+            var timeEnd = DateTime.Now;
+            var timeElapsed = timeEnd - timeStart;
+            Console.WriteLine(timeElapsed);
+            return result;
+
         }
     }
 }

@@ -27,8 +27,8 @@ builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
 
 //builder.Services.AddScoped<IPropertyOwnerService, PropertyOwnerService>();
 
-//builder.Services.AddScoped<IPropertyOwnerRepository, PropertyOwnerRepository>();   
-builder.Services.AddScoped<IPropertyOwnerRepository, PropertyOwnerRepositoryDapper>(); 
+builder.Services.AddScoped<IPropertyOwnerRepository, PropertyOwnerRepository>();   
+//builder.Services.AddScoped<IPropertyOwnerRepository, PropertyOwnerRepositoryDapper>(); 
 
 builder.Services.AddScoped<IPropertyOwnerService, PropertyOwnerService2>();    
 
@@ -50,6 +50,14 @@ builder.Services.AddScoped<IDbConnection>(sp =>
 
 // Register your repository
 builder.Services.AddScoped(typeof(IRepository<>), typeof(DapperRepository<>));
+
+
+// Add Redis Distributed Cache
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
+    options.InstanceName = "SampleInstance";  // Optional instance name
+});
 
 
 

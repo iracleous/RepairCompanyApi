@@ -26,7 +26,7 @@ public class PropertyOwnerService3: IPropertyOwnerService
         throw new NotImplementedException();
     }
 
-    public Task<ActionResult<IEnumerable<OwnerDataDto>>> GetOwnerData(int pageCount, int pageSize)
+    public Task<ActionResult<IEnumerable<OwnerDataDto>>> GetOwnerDataAsync(int pageCount, int pageSize)
     {
         throw new NotImplementedException();
     }

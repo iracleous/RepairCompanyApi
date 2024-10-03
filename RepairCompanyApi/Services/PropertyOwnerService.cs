@@ -123,7 +123,7 @@ namespace RepairCompanyApi.Services
             return new NoContentResult();
         }
 
-        public async Task<ActionResult<IEnumerable<OwnerDataDto>>> GetOwnerData(int pageCount, int pageSize)
+        public async Task<ActionResult<IEnumerable<OwnerDataDto>>> GetOwnerDataAsync(int pageCount, int pageSize)
         {
             _logger.LogDebug("start");
             if (pageCount <= 0) pageCount = 1;

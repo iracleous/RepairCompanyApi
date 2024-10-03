@@ -19,6 +19,6 @@ public class DemoMapperController : ControllerBase
     [HttpGet("")]
     public async Task<ActionResult<IEnumerable<OwnerDataDto>>> GetOwnerData()
     {
-        return await _propertyOwnerService2.GetOwnerData(1, 1);
+        return await _propertyOwnerService2.GetOwnerDataAsync(1, 1);
     }
 }
