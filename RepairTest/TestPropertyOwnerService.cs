@@ -7,6 +7,7 @@ using RepairCompanyApi.Models;
 using RepairCompanyApi.Repository;
 using RepairCompanyApi.Services;
 using RepairCompanyApi.Services.Implementations;
+using Xunit.Sdk;
 
 
 namespace RepairTest;
@@ -29,33 +30,57 @@ public class TestPropertyOwnerService
 
         // Inject the mock into the service
         _ownerService = new PropertyOwnerServiceUsingRepository(
-             _mapperMock.Object, _ownerRepositoryMock.Object,
-          _loggerMock.Object, _cacheMock.Object);
+           _mapperMock.Object, _ownerRepositoryMock.Object,
+           _loggerMock.Object, _cacheMock.Object);
     }
 
 
-    [Fact]
-    public async Task CreateOwnerAsync_ShouldReturnOwner_WhenAllowedAddress ()
+    [Theory]
+    [InlineData("", "Athens" )]
+    [InlineData(null, "Athens" )]
+    [InlineData("Georgiou", "Athens")]
+    public async Task CreateOwnerAsync_ShouldReturnOwner_WhenAllowedAddress (string lastNane, string city )
     {
         // Arrange
         var ownerId = 1;
-        var owner = new PropertyOwner {   LastName = "Georgiou", Address = "Athens"  };
-        var ownerDto = new PropertyOwnerDtoRequest { LastName = "Georgiou", Address = "Athens" };
+        var owner = new PropertyOwner {   LastName = lastNane, Address = city };
+        var ownerDto = new PropertyOwnerDtoRequest { LastName = lastNane, Address = city };
         var expectedOwnerId = 1L;
 
-        // Setup the mock to return the order when GetOrderById is called
+        // Setup the mock to return the returns ownerId  when AddAsync is called
         _ownerRepositoryMock.Setup(repo => repo.AddAsync(owner)).ReturnsAsync(1L);
+        _mapperMock.Setup(service => service.Map<PropertyOwner>(ownerDto)).Returns(owner);
 
         // Act
         var result = await _ownerService.CreatePropertyOwner(ownerDto);
         
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(expectedOwnerId, result.Result);
+    }
+
+    [Theory]
+    [InlineData("", "Lamia")]
+    [InlineData(null, "Lamia")]
+    [InlineData("Georgiou", "Lamia")]
+    public async Task CreateOwnerAsync_ShouldNotReturnOwner_WhenAllowedAddress(string lastNane, string city)
+    {
+        // Arrange
+        var ownerId = 1;
+        var owner = new PropertyOwner { LastName = lastNane, Address = city };
+        var ownerDto = new PropertyOwnerDtoRequest { LastName = lastNane, Address = city };
+        var expectedOwnerId = 0L;
+
+        // Setup the mock to return the returns ownerId  when AddAsync is called
+        _ownerRepositoryMock.Setup(repo => repo.AddAsync(owner)).ReturnsAsync(1L);
+        _mapperMock.Setup(service => service.Map<PropertyOwner>(ownerDto)).Returns(owner);
+
+        // Act
+        var result = await _ownerService.CreatePropertyOwner(ownerDto);
 
         // Assert
         Assert.NotNull(result);
         Assert.Equal(expectedOwnerId, result.Result);
-      
     }
-
-     
 
 }
