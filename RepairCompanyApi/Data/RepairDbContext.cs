@@ -20,8 +20,7 @@ public class RepairDbContext:DbContext
     public DbSet<BuildingProperty> BuildingProperties { get; set; }
     public DbSet<Repair> Repairs { get; set; }
 
-    public DbSet<Owner> Owners { get; set; }
-    public DbSet<Address> Addresses { get; set; }
+   
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Moq;
+using RepairCompanyApi.Dtos;
 using RepairCompanyApi.Models;
 using RepairCompanyApi.Repository;
 using RepairCompanyApi.Services;
@@ -39,18 +40,19 @@ public class TestPropertyOwnerService
         // Arrange
         var ownerId = 1;
         var owner = new PropertyOwner {   LastName = "Georgiou", Address = "Athens"  };
-        var expectedOwnerId = 1;
+        var ownerDto = new PropertyOwnerDtoRequest { LastName = "Georgiou", Address = "Athens" };
+        var expectedOwnerId = 1L;
 
         // Setup the mock to return the order when GetOrderById is called
-        _ownerRepositoryMock.Setup(repo => repo.AddAsync(owner)).ReturnsAsync(true);
+        _ownerRepositoryMock.Setup(repo => repo.AddAsync(owner)).ReturnsAsync(1L);
 
         // Act
-        var result = await _ownerService.PostPropertyOwner(owner);
+        var result = await _ownerService.CreatePropertyOwner(ownerDto);
         
 
         // Assert
-        Assert.NotNull(result.Value);
-        Assert.Equal(expectedOwnerId, result.Value.Id);
+        Assert.NotNull(result);
+        Assert.Equal(expectedOwnerId, result.Result);
       
     }
 

@@ -23,17 +23,13 @@ builder.Services.AddControllers();
 //     .ReferenceHandler = ReferenceHandler.Preserve;
 //});
 
-
 builder.Services.AddScoped<IWeatherService,WeatherService>();
 builder.Services.AddScoped<IWeatherRepository, WeatherRepositoryUsingEF>();
-
-
 
 builder.Services.AddScoped<IPropertyOwnerRepository, PropertyOwnerRepositoryUsingEF>();   
 //builder.Services.AddScoped<IPropertyOwnerRepository, PropertyOwnerRepositoryDapper>(); 
 
 builder.Services.AddScoped<IPropertyOwnerService, PropertyOwnerServiceUsingRepository>();    
-
 
 builder.Services.AddDbContext<RepairDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -44,7 +40,6 @@ builder.Services.AddSwaggerGen();
 
 //builder.Services.AddAutoMapper(typeof(OwnerMappingProfile));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
 
 // Register IDbConnection to inject SqlConnection
 builder.Services.AddScoped<IDbConnection>(sp =>

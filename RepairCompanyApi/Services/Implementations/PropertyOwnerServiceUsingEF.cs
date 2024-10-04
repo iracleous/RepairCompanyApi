@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RepairCompanyApi.Data;
 using RepairCompanyApi.Dtos;
@@ -11,11 +12,13 @@ namespace RepairCompanyApi.Services.Implementations
     {
         private readonly RepairDbContext _context;
         private ILogger<PropertyOwnerServiceUsingEF> _logger;
+        private readonly IMapper _mapper;
 
-        public PropertyOwnerServiceUsingEF(RepairDbContext context, ILogger<PropertyOwnerServiceUsingEF> logger)
+        public PropertyOwnerServiceUsingEF(RepairDbContext context, ILogger<PropertyOwnerServiceUsingEF> logger, IMapper mapper)
         {
             _context = context;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task<ActionResult<IEnumerable<PropertyOwner>>> GetPropertyOwners(int pageCount, int pageSize)
@@ -73,14 +76,18 @@ namespace RepairCompanyApi.Services.Implementations
             return new NoContentResult();
         }
 
-
-        public async Task<ActionResult<PropertyOwner>> PostPropertyOwner(PropertyOwner propertyOwner)
+     public async    Task<ApiResult<long>> CreatePropertyOwner(PropertyOwnerDtoRequest propertyOwnerDto) 
         {
+            var propertyOwner = _mapper.Map<PropertyOwner>(propertyOwnerDto);
             _context.PropertyOwners.Add(propertyOwner);
             await _context.SaveChangesAsync();
 
-            return new CreatedAtActionResult(
-                "GetPropertyOwner", null, new { id = propertyOwner.Id }, propertyOwner);
+            return new ApiResult<long>
+            {
+                Description = "Successfully saved",
+                 StatusCode =0,
+                  Result = propertyOwner.Id
+            };
         }
 
         // DELETE: api/PropertyOwners/5
@@ -190,6 +197,8 @@ namespace RepairCompanyApi.Services.Implementations
         {
             throw new NotImplementedException();
         }
+
+       
     }
 }
 

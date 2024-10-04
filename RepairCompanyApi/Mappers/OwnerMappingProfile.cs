@@ -23,7 +23,11 @@ public class OwnerMappingProfile : Profile
           //  .ForMember(dest => dest.BuildingId, opt => opt.MapFrom(src => src.Id))  
          //   .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address));
     
-            CreateMap<Repair, BuildingRepairDto>();  
-    
+            CreateMap<Repair, BuildingRepairDto>();
+
+        //source, destination 
+        CreateMap< PropertyOwnerDtoRequest, PropertyOwner>();
+
+
     }
 }

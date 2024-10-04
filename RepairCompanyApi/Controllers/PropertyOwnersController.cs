@@ -52,9 +52,9 @@ public class PropertyOwnersController : ControllerBase
     // POST: api/PropertyOwners
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<PropertyOwner>> PostPropertyOwner(PropertyOwner propertyOwner)
+    public async Task<ApiResult<long>> PostPropertyOwner(PropertyOwnerDtoRequest propertyOwnerDto)
     {
-        return await _service.PostPropertyOwner(propertyOwner);
+        return await _service.CreatePropertyOwner(propertyOwnerDto);
      }
 
     // DELETE: api/PropertyOwners/5

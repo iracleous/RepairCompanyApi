@@ -3,6 +3,6 @@
 public class ApiResult<T>
 {
     public T? Result { get; set; }
-    public string Error { get; set; } = string.Empty;
-    public int Status { get; set; }
+    public string Description { get; set; } = string.Empty;
+    public int StatusCode { get; set; }
 }

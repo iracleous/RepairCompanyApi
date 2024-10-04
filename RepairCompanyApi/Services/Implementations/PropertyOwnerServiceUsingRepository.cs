@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -105,17 +106,17 @@ public class PropertyOwnerServiceUsingRepository : IPropertyOwnerService
         throw new NotImplementedException();
     }
 
-    public async Task<ActionResult<PropertyOwner>> PostPropertyOwner(PropertyOwner propertyOwner)
-    {
-        if (propertyOwner == null) 
-            return new BadRequestResult(); 
-        if (propertyOwner.Address == null || !propertyOwner.Address.Equals("Athens"))
-            throw new ArgumentNullException(nameof(propertyOwner));
+    //public async Task<ActionResult<PropertyOwner>> PostPropertyOwner(PropertyOwner propertyOwner)
+    //{
+    //    if (propertyOwner == null) 
+    //        return new BadRequestResult(); 
+    //    if (propertyOwner.Address == null || !propertyOwner.Address.Equals("Athens"))
+    //        return new BadRequestResult();
 
-        bool returnValue = await _propertyOwnerRepository.AddAsync(propertyOwner);
-        await cleanKeysAsync();
-        return propertyOwner;
-    }
+    //    bool returnValue = await _propertyOwnerRepository.AddAsync(propertyOwner);
+    //    await cleanKeysAsync();
+    //    return propertyOwner;
+    //}
 
     public Task<IActionResult> PutPropertyOwner(long id, PropertyOwner propertyOwner)
     {
@@ -134,5 +135,40 @@ public class PropertyOwnerServiceUsingRepository : IPropertyOwnerService
     {
         throw new NotImplementedException();
     }
+
+
+
+    public async Task<ApiResult<long>> CreatePropertyOwner(PropertyOwnerDtoRequest propertyOwnerDto)  {
+        if (propertyOwnerDto == null)
+            return new ApiResult<long>
+            {
+                 Description = "Null parameter",
+                 StatusCode = -10,
+            };
+        if (propertyOwnerDto.Address == null || !propertyOwnerDto.Address.Equals("Athens"))
+            return new ApiResult<long>
+            {
+                Description = "Invalid address",
+                StatusCode = -11,
+            };
+
+        long createdOwnerId = await _propertyOwnerRepository.AddAsync
+            (_mapper.Map<PropertyOwner>(  propertyOwnerDto));
+        if (createdOwnerId <= 0)
+            return new ApiResult<long>
+            {
+                Description = "Not saved",
+                StatusCode = -12,
+            };
+        await cleanKeysAsync();
+        return new ApiResult<long>
+        {
+            Description = "Successfull",
+            Result = createdOwnerId
+        };
+    }
+
+
+
 }
 

@@ -38,11 +38,11 @@ public class PropertyOwnerRepositoryUsingEF : IPropertyOwnerRepository
         return await _context.PropertyOwners.FindAsync(id);
     }
 
-    public async Task<bool> AddAsync(PropertyOwner PropertyOwner)
+    public async Task<long> AddAsync(PropertyOwner PropertyOwner)
     {
         await _context.PropertyOwners.AddAsync(PropertyOwner);
-        var result = await _context.SaveChangesAsync();
-        return result > 0;
+        await _context.SaveChangesAsync();
+        return PropertyOwner.Id;
     }
 
     public async Task<bool> UpdateAsync(PropertyOwner owner)
@@ -97,8 +97,8 @@ public class PropertyOwnerRepositoryUsingEF : IPropertyOwnerRepository
         {
             return new ApiResult<IEnumerable<PropertyOwner>>
             {
-                Status = 0,
-                Error = string.Empty,
+                StatusCode = 0,
+                Description = string.Empty,
                 Result = await _context.PropertyOwners
                                     .Include(o => o.BuildingProperties)
                                     .ThenInclude(b => b.Repairs)
@@ -111,8 +111,8 @@ public class PropertyOwnerRepositoryUsingEF : IPropertyOwnerRepository
         {
             return new ApiResult<IEnumerable<PropertyOwner>>
             {
-                Status = 12,
-                Error = ea.Message,
+                StatusCode = 12,
+                Description = ea.Message,
                 Result = null
             };
         }
@@ -120,8 +120,8 @@ public class PropertyOwnerRepositoryUsingEF : IPropertyOwnerRepository
         {
             return new ApiResult<IEnumerable<PropertyOwner>>
             {
-                Status = 10,
-                Error = e.Message,
+                StatusCode = 10,
+                Description = e.Message,
                 Result = null
             };
         }

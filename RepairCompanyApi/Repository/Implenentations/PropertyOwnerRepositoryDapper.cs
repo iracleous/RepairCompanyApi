@@ -25,11 +25,13 @@ public class PropertyOwnerRepositoryDapper : IPropertyOwnerRepository
         return await _dbConnection.QueryFirstOrDefaultAsync<PropertyOwner>(sql, new { Id = id });
     }
 
-    public async Task<bool> AddAsync(PropertyOwner entity)
+    public async Task<long> AddAsync(PropertyOwner entity)
     {
         var sql = $"INSERT INTO PropertyOwners VALUES (@Entity); SELECT CAST(SCOPE_IDENTITY() as long)";
         var result = await _dbConnection.ExecuteAsync(sql, new { Entity = entity });
-        return result > 0;
+
+        //to do get the new id
+        return  result;
     }
 
     public async Task<bool> UpdateAsync(PropertyOwner entity)
