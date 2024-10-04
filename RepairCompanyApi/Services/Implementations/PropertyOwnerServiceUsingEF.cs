@@ -5,14 +5,14 @@ using RepairCompanyApi.Dtos;
 using RepairCompanyApi.Models;
 using System.Drawing.Printing;
 
-namespace RepairCompanyApi.Services
+namespace RepairCompanyApi.Services.Implementations
 {
-    public class PropertyOwnerService : IPropertyOwnerService
+    public class PropertyOwnerServiceUsingEF : IPropertyOwnerService
     {
         private readonly RepairDbContext _context;
-        private ILogger<PropertyOwnerService> _logger;
+        private ILogger<PropertyOwnerServiceUsingEF> _logger;
 
-        public PropertyOwnerService(RepairDbContext context, ILogger<PropertyOwnerService> logger)
+        public PropertyOwnerServiceUsingEF(RepairDbContext context, ILogger<PropertyOwnerServiceUsingEF> logger)
         {
             _context = context;
             _logger = logger;
@@ -22,14 +22,14 @@ namespace RepairCompanyApi.Services
         {
             _logger.LogDebug("start");
             if (pageCount <= 0) pageCount = 1;
-            if (pageSize <= 0 || pageSize>20) pageSize = 10;
-            return await _context.PropertyOwners.Include (o => o.BuildingProperties)
-                .Skip( (pageCount-1)*pageSize )
+            if (pageSize <= 0 || pageSize > 20) pageSize = 10;
+            return await _context.PropertyOwners.Include(o => o.BuildingProperties)
+                .Skip((pageCount - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
         }
 
-       
+
         public async Task<ActionResult<PropertyOwner>> GetPropertyOwner(long id)
         {
             var propertyOwner = await _context
@@ -38,13 +38,13 @@ namespace RepairCompanyApi.Services
                 .FirstOrDefaultAsync(o => o.Id == id);
             if (propertyOwner == null)
             {
-                return   new NotFoundResult();
+                return new NotFoundResult();
             }
 
             return propertyOwner;
         }
 
-       
+
         public async Task<IActionResult> PutPropertyOwner(long id, PropertyOwner propertyOwner)
         {
             if (id != propertyOwner.Id)
@@ -73,14 +73,14 @@ namespace RepairCompanyApi.Services
             return new NoContentResult();
         }
 
-         
+
         public async Task<ActionResult<PropertyOwner>> PostPropertyOwner(PropertyOwner propertyOwner)
         {
             _context.PropertyOwners.Add(propertyOwner);
             await _context.SaveChangesAsync();
 
             return new CreatedAtActionResult(
-                "GetPropertyOwner", null, new { id = propertyOwner.Id }, propertyOwner );
+                "GetPropertyOwner", null, new { id = propertyOwner.Id }, propertyOwner);
         }
 
         // DELETE: api/PropertyOwners/5
@@ -135,11 +135,11 @@ namespace RepairCompanyApi.Services
                 .ToListAsync();
 
             List<OwnerDataDto> result = propertyOwners
-                        .ConvertAll<OwnerDataDto>(o => new OwnerDataDto
+                        .ConvertAll(o => new OwnerDataDto
                         {
                             OwnerId = o.Id,
                             OwnerName = o.LastName + " " + o.FirstName,
-                            Buildings = o.BuildingProperties.ConvertAll<BuildingOwnerDto>(
+                            Buildings = o.BuildingProperties.ConvertAll(
                                  b => new BuildingOwnerDto
                                  {
                                      Address = b.Address,
@@ -170,6 +170,25 @@ namespace RepairCompanyApi.Services
             //    }
             //    )
             //    .ToListAsync();
+        }
+
+        public async Task<ActionResult<Statistics>> CalculateStatistics()
+        {
+            var statistics = new Statistics
+            {
+                NumberOfPropertyOwners =
+               await _context.PropertyOwners.CountAsync(),
+                NumberOfOwnersWithZeroProperties =
+               await _context
+                   .PropertyOwners
+                   .CountAsync(propOwn => propOwn.BuildingProperties.Count() == 0)
+            };
+            return statistics; ;
+        }
+
+        Task<ActionResult<OwnerDataDto?>> IPropertyOwnerService.GetPropertyOwner(long id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

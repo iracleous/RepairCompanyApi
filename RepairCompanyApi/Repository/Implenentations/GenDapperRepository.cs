@@ -1,22 +1,22 @@
-﻿namespace RepairCompanyApi.Repository;
+﻿namespace RepairCompanyApi.Repository.Implenentations;
 
 using Dapper;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
-public class DapperRepository<T> : IRepository<T> where T : class
+public class GenDapperRepository<T> : IRepository<T> where T : class
 {
     private readonly IDbConnection _dbConnection;
 
-    public DapperRepository(IDbConnection dbConnection)
+    public GenDapperRepository(IDbConnection dbConnection)
     {
         _dbConnection = dbConnection;
     }
 
     public async Task<IEnumerable<T>> GetAllAsync(int pageCount, int pageSize)
     {
-        var sql = $"SELECT * FROM {typeof(T).Name}s order by Id "; 
+        var sql = $"SELECT * FROM {typeof(T).Name}s order by Id ";
         return await _dbConnection.QueryAsync<T>(sql);
     }
 

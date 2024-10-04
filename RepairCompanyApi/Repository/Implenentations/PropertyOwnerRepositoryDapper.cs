@@ -2,7 +2,7 @@
 using RepairCompanyApi.Models;
 using System.Data;
 
-namespace RepairCompanyApi.Repository;
+namespace RepairCompanyApi.Repository.Implenentations;
 
 public class PropertyOwnerRepositoryDapper : IPropertyOwnerRepository
 {
@@ -15,7 +15,7 @@ public class PropertyOwnerRepositoryDapper : IPropertyOwnerRepository
 
     public async Task<IEnumerable<PropertyOwner>> GetAllAsync(int pageCount, int pageSize)
     {
-         var sql = $"SELECT * FROM PropertyOwners order by id OFFSET @Offset ROWS FETCH NEXT @Page ROWS ONLY";
+        var sql = $"SELECT * FROM PropertyOwners order by id OFFSET @Offset ROWS FETCH NEXT @Page ROWS ONLY";
         return await _dbConnection.QueryAsync<PropertyOwner>(sql, new { Offset = (pageCount - 1) * pageSize, Page = pageSize });
     }
 
@@ -45,7 +45,7 @@ public class PropertyOwnerRepositoryDapper : IPropertyOwnerRepository
         var result = await _dbConnection.ExecuteAsync(sql, new { Id = id });
         return result > 0;
     }
-  
+
     public async Task<PropertyOwner?> GetByNameAsync(string name)
     {
         var sql = $"SELECT * FROM PropertyOwners WHERE name = @Name";

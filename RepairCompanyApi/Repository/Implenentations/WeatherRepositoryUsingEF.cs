@@ -1,14 +1,14 @@
 ﻿using RepairCompanyApi.Data;
 using RepairCompanyApi.Models;
 
-namespace RepairCompanyApi.Repository;
+namespace RepairCompanyApi.Repository.Implenentations;
 
-public class WeatherRepository : IWeatherRepository
+public class WeatherRepositoryUsingEF : IWeatherRepository
 {
 
-    private readonly  RepairDbContext _repairDbContext;
+    private readonly RepairDbContext _repairDbContext;
 
-    public WeatherRepository(RepairDbContext repairDbContext)
+    public WeatherRepositoryUsingEF(RepairDbContext repairDbContext)
     {
         _repairDbContext = repairDbContext;
     }

@@ -5,24 +5,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
-
 using RepairCompanyApi.Dtos;
 using RepairCompanyApi.Models;
 using RepairCompanyApi.Repository;
 using StackExchange.Redis;
 using System.Drawing.Printing;
 
-namespace RepairCompanyApi.Services;
+namespace RepairCompanyApi.Services.Implementations;
 
-public class PropertyOwnerService2: IPropertyOwnerService
+public class PropertyOwnerServiceUsingRepository : IPropertyOwnerService
 {
     private readonly IMapper _mapper;
     private readonly IPropertyOwnerRepository _propertyOwnerRepository;
-    private readonly ILogger<PropertyOwnerService2> _logger;
+    private readonly ILogger<PropertyOwnerServiceUsingRepository> _logger;
     private readonly IDistributedCache _cache;
 
-    public PropertyOwnerService2(IMapper mapper, IPropertyOwnerRepository propertyOwnerRepository, 
-        ILogger<PropertyOwnerService2> logger, IDistributedCache cache)
+    public PropertyOwnerServiceUsingRepository(IMapper mapper, IPropertyOwnerRepository propertyOwnerRepository,
+        ILogger<PropertyOwnerServiceUsingRepository> logger, IDistributedCache cache)
     {
         _mapper = mapper;
         _propertyOwnerRepository = propertyOwnerRepository;
@@ -72,11 +71,33 @@ public class PropertyOwnerService2: IPropertyOwnerService
         throw new NotImplementedException();
     }
 
-  
 
-    public Task<ActionResult<PropertyOwner>> GetPropertyOwner(long id)
+
+    public async Task<ActionResult<OwnerDataDto?>> GetPropertyOwner(long id)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("start");
+        string cacheKey = $"ownerId:{id}";
+        var cachedData = await _cache.GetStringAsync(cacheKey);
+
+        if (string.IsNullOrEmpty(cachedData))
+        {
+            PropertyOwner? propertyOwner =
+                await _propertyOwnerRepository
+                .GetByIdAsync(id);
+
+            OwnerDataDto ownerDataDto = _mapper.Map<OwnerDataDto>(propertyOwner);
+
+            await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(ownerDataDto), new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15)
+            });
+            return ownerDataDto;
+        }
+        OwnerDataDto? ownerDataDtoFromDb = 
+            JsonConvert.DeserializeObject<OwnerDataDto>(cachedData);
+        Console.WriteLine("cache was used");
+        return ownerDataDtoFromDb ;
+
     }
 
     public Task<ActionResult<IEnumerable<PropertyOwner>>> GetPropertyOwners(int pageCount, int pageSize)
@@ -86,7 +107,12 @@ public class PropertyOwnerService2: IPropertyOwnerService
 
     public async Task<ActionResult<PropertyOwner>> PostPropertyOwner(PropertyOwner propertyOwner)
     {
-       bool returnValue = await _propertyOwnerRepository.AddAsync(propertyOwner);
+        if (propertyOwner == null) 
+            return new BadRequestResult(); 
+        if (propertyOwner.Address == null || !propertyOwner.Address.Equals("Athens"))
+            throw new ArgumentNullException(nameof(propertyOwner));
+
+        bool returnValue = await _propertyOwnerRepository.AddAsync(propertyOwner);
         await cleanKeysAsync();
         return propertyOwner;
     }
@@ -102,6 +128,11 @@ public class PropertyOwnerService2: IPropertyOwnerService
         int pageSize = 2;
         var key = $"pageCount:{pageCount}:pageSize:{pageSize}";
         await _cache.RemoveAsync(key);
+    }
+
+    public Task<ActionResult<Statistics>> CalculateStatistics()
+    {
+        throw new NotImplementedException();
     }
 }
 

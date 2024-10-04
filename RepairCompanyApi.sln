@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepairCompanyApi", "RepairCompanyApi\RepairCompanyApi.csproj", "{8B6F7490-B151-41FE-879E-4B4A8BB44265}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepairCompanyApi", "RepairCompanyApi\RepairCompanyApi.csproj", "{8B6F7490-B151-41FE-879E-4B4A8BB44265}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepairDomain", "RepairDomain\RepairDomain.csproj", "{F2376C24-73C3-4E47-BA0D-5D38783C75E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepairTest", "RepairTest\RepairTest.csproj", "{E42205D7-CA52-41F6-B066-ACB0598EA885}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{8B6F7490-B151-41FE-879E-4B4A8BB44265}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B6F7490-B151-41FE-879E-4B4A8BB44265}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B6F7490-B151-41FE-879E-4B4A8BB44265}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2376C24-73C3-4E47-BA0D-5D38783C75E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2376C24-73C3-4E47-BA0D-5D38783C75E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2376C24-73C3-4E47-BA0D-5D38783C75E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2376C24-73C3-4E47-BA0D-5D38783C75E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E42205D7-CA52-41F6-B066-ACB0598EA885}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E42205D7-CA52-41F6-B066-ACB0598EA885}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E42205D7-CA52-41F6-B066-ACB0598EA885}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E42205D7-CA52-41F6-B066-ACB0598EA885}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

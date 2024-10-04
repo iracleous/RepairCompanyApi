@@ -7,14 +7,15 @@ namespace RepairCompanyApi.Services;
 
 public interface IPropertyOwnerService
 {
-    public Task<ActionResult<IEnumerable<PropertyOwner>>> GetPropertyOwners(int pageCount, int pageSize);
-    public Task<ActionResult<PropertyOwner>> GetPropertyOwner(long id);
-    public Task<IActionResult> PutPropertyOwner(long id, PropertyOwner propertyOwner);
-    public Task<ActionResult<PropertyOwner>> PostPropertyOwner
-        (PropertyOwner propertyOwner);
-    public Task<IActionResult> DeletePropertyOwner(long id);
+    Task<ActionResult<IEnumerable<PropertyOwner>>> GetPropertyOwners(int pageCount, int pageSize);
+    Task<ActionResult<OwnerDataDto?>> GetPropertyOwner(long id);
+    Task<IActionResult> PutPropertyOwner(long id, PropertyOwner propertyOwner);
+    Task<ActionResult<PropertyOwner>> PostPropertyOwner(PropertyOwner propertyOwner);
+    Task<IActionResult> DeletePropertyOwner(long id);
 
-    public Task<IActionResult> AssignPropertyToOwner(long popertyOwnerId, long propertyId);
+    Task<IActionResult> AssignPropertyToOwner(long popertyOwnerId, long propertyId);
 
-    public Task<ActionResult<IEnumerable<OwnerDataDto>>> GetOwnerDataAsync(int pageCount, int pageSize);
+    Task<ActionResult<IEnumerable<OwnerDataDto>>> GetOwnerDataAsync(int pageCount, int pageSize);
+
+    Task<ActionResult<Statistics>> CalculateStatistics(); 
  }

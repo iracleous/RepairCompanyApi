@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RepairCompanyApi.Data;
 using RepairCompanyApi.Repository;
+using RepairCompanyApi.Repository.Implenentations;
 using RepairCompanyApi.Security;
 using RepairCompanyApi.Services;
+using RepairCompanyApi.Services.Implementations;
 using System.Data;
 using System.Text;
 
@@ -23,14 +25,14 @@ builder.Services.AddControllers();
 
 
 builder.Services.AddScoped<IWeatherService,WeatherService>();
-builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
+builder.Services.AddScoped<IWeatherRepository, WeatherRepositoryUsingEF>();
 
-//builder.Services.AddScoped<IPropertyOwnerService, PropertyOwnerService>();
 
-builder.Services.AddScoped<IPropertyOwnerRepository, PropertyOwnerRepository>();   
+
+builder.Services.AddScoped<IPropertyOwnerRepository, PropertyOwnerRepositoryUsingEF>();   
 //builder.Services.AddScoped<IPropertyOwnerRepository, PropertyOwnerRepositoryDapper>(); 
 
-builder.Services.AddScoped<IPropertyOwnerService, PropertyOwnerService2>();    
+builder.Services.AddScoped<IPropertyOwnerService, PropertyOwnerServiceUsingRepository>();    
 
 
 builder.Services.AddDbContext<RepairDbContext>(options =>
@@ -49,7 +51,7 @@ builder.Services.AddScoped<IDbConnection>(sp =>
     new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register your repository
-builder.Services.AddScoped(typeof(IRepository<>), typeof(DapperRepository<>));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(GenDapperRepository<>));
 
 
 // Add Redis Distributed Cache

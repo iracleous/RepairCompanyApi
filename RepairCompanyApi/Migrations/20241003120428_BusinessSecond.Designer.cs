@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RepairCompanyApi.Data;
 
@@ -11,9 +12,11 @@ using RepairCompanyApi.Data;
 namespace RepairCompanyApi.Migrations
 {
     [DbContext(typeof(RepairDbContext))]
-    partial class RepairDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241003120428_BusinessSecond")]
+    partial class BusinessSecond
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

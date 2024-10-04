@@ -3,14 +3,14 @@ using RepairCompanyApi.Data;
 using RepairCompanyApi.Dtos;
 using RepairCompanyApi.Models;
 
-namespace RepairCompanyApi.Repository;
+namespace RepairCompanyApi.Repository.Implenentations;
 
-public class PropertyOwnerRepository: IPropertyOwnerRepository
+public class PropertyOwnerRepositoryUsingEF : IPropertyOwnerRepository
 {
     private readonly RepairDbContext _context;
     private readonly ILogger<PropertyOwner> _logger;
 
-    public PropertyOwnerRepository(RepairDbContext context, ILogger<PropertyOwner> logger)
+    public PropertyOwnerRepositoryUsingEF(RepairDbContext context, ILogger<PropertyOwner> logger)
     {
         _context = context;
         _logger = logger;
@@ -18,19 +18,21 @@ public class PropertyOwnerRepository: IPropertyOwnerRepository
 
     public async Task<IEnumerable<PropertyOwner>> GetAllAsync(int pageCount, int pageSize)
     {
-        try { 
-        return await _context.PropertyOwners
-            .Include(o => o.BuildingProperties)
-            .ThenInclude(b => b.Repairs)
-            .Skip(pageSize*(pageCount-1))
-            .Take(pageSize)
-            .ToListAsync();}
+        try
+        {
+            return await _context.PropertyOwners
+                .Include(o => o.BuildingProperties)
+                .ThenInclude(b => b.Repairs)
+                .Skip(pageSize * (pageCount - 1))
+                .Take(pageSize)
+                .ToListAsync();
+        }
         catch (Exception)
         {
             return [];
         }
     }
-   
+
     public async Task<PropertyOwner?> GetByIdAsync(long id)
     {
         return await _context.PropertyOwners.FindAsync(id);
@@ -47,10 +49,10 @@ public class PropertyOwnerRepository: IPropertyOwnerRepository
     {
         try
         {
-            _context.PropertyOwners.Update(owner); 
-            var result = await _context.SaveChangesAsync(); 
+            _context.PropertyOwners.Update(owner);
+            var result = await _context.SaveChangesAsync();
 
-            return result > 0; 
+            return result > 0;
         }
         catch (DbUpdateConcurrencyException ex)
         {
@@ -59,7 +61,7 @@ public class PropertyOwnerRepository: IPropertyOwnerRepository
         }
         catch (DbUpdateException ex)
         {
-            _logger.LogWarning("Database update failed: {message}",ex.Message);
+            _logger.LogWarning("Database update failed: {message}", ex.Message);
             return false;
         }
         catch (Exception ex)
@@ -105,7 +107,8 @@ public class PropertyOwnerRepository: IPropertyOwnerRepository
                                     .ToListAsync()
             };
         }
-        catch(ArgumentException ea){
+        catch (ArgumentException ea)
+        {
             return new ApiResult<IEnumerable<PropertyOwner>>
             {
                 Status = 12,

@@ -9,12 +9,12 @@ namespace RepairCompanyApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BuildingController : ControllerBase
+public class BuildingControllerScaffolded : ControllerBase
 {
 
     private readonly RepairDbContext _context;
 
-    public BuildingController(RepairDbContext context)
+    public BuildingControllerScaffolded(RepairDbContext context)
     {
         _context = context;
     }
@@ -44,18 +44,7 @@ public class BuildingController : ControllerBase
     }
 
 
-    [HttpGet("stats")]
-    public async Task<ActionResult<Statistics>> GetStatistics()
-    {
-        var statistics = new Statistics();
-        statistics.NumberOfPropertyOwners =
-           await  _context.PropertyOwners.CountAsync();
-        statistics.NumberOfOwnersWithZeroProperties =
-           await _context
-               .PropertyOwners
-               .CountAsync(propOwn => propOwn.BuildingProperties.Count() == 0);
-        return statistics;
-    }
+   
 
 
 }

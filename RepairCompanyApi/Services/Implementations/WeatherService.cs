@@ -1,7 +1,7 @@
 ﻿using RepairCompanyApi.Models;
 using RepairCompanyApi.Repository;
 
-namespace RepairCompanyApi.Services;
+namespace RepairCompanyApi.Services.Implementations;
 
 public class WeatherService : IWeatherService
 {
