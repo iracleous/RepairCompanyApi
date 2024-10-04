@@ -99,4 +99,11 @@ public class PropertyOwnersController : ControllerBase
         return await _service.CalculateStatistics();
     }
 
+
+
+
+
+
+
+
 }
